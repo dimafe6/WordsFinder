@@ -30,7 +30,7 @@ class FormatFactory
                 $className = "ConverterPpt";
                 break;
             case 'txt':
-                $className = "ConverterT";
+                $className = "ConverterTxt";
                 break;
             default:
                 $className = "Converter" . ucfirst($fileType);
