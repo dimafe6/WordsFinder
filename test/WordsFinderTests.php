@@ -2,7 +2,8 @@
 
 namespace WordsFinder\WordsFinderTests;
 
-use WordsFinder\StopWordsFinder;
+use WordsFinder\DefaultWordsFinder;
+use WordsFinder\WordsFinderManager;
 
 class WordsFinderTests extends \PHPUnit_Framework_TestCase
 {
@@ -14,208 +15,8 @@ class WordsFinderTests extends \PHPUnit_Framework_TestCase
         __DIR__ . '/testFiles/testFile2.txt',
     ];
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testCreateWordsFinder()
+    private function getSearchFiles()
     {
-        $wf = new StopWordsFinder([], []);
-    }
-
-    public function testProceedFile()
-    {
-        $assertResult = [
-            'testFile.txt' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile($this->searchFiles[0]);
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testDocx()
-    {
-        $assertResult = [
-            'test.docx' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.docx');
-
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testDoc()
-    {
-        $assertResult = [
-            'test.doc' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.doc');
-
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testPdf()
-    {
-        $assertResult = [
-            'test.pdf' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.pdf');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXls()
-    {
-        $assertResult = [
-            'test.xls' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xls');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXlsx()
-    {
-        $assertResult = [
-            'test.xlsx' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xlsx');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXlt()
-    {
-        $assertResult = [
-            'test.xlt' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xlt');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXlsm()
-    {
-        $assertResult = [
-            'test.xlsm' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xlsm');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXltx()
-    {
-        $assertResult = [
-            'test.xltx' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xltx');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXltm()
-    {
-        $assertResult = [
-            'test.xltm' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xltm');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testOds()
-    {
-        $assertResult = [
-            'test.ods' => 3
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.ods');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testSlk()
-    {
-        $assertResult = [
-            'test.slk' => 2
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.slk');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testXml()
-    {
-        $assertResult = [
-            'test.xml' => 1
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.xml');
-
-        $this->assertEquals($assertResult, $result);
-    }
-
-    public function testPptx()
-    {
-        $assertResult = [
-            'test.ppsx' => 2
-        ];
-
-        $swf = new StopWordsFinder($this->stopWords);
-        $result = $swf->proceedFile(__DIR__ . '/testFiles/test.ppsx');
-
-        $this->assertEquals($assertResult, $result);
-
-    }
-
-    public function testProceedAllFiles()
-    {
-        $assertResult = [
-            'testFile.txt' => 3,
-            'testFile1.txt' => 15,
-            'testFile2.txt' => 6,
-            'test.xls' => 3,
-            'test.xml' => 1,
-            'test.xlsm' => 3,
-            'test.xlt' => 3,
-            'test.docx' => 3,
-            'test.rtf' => 3,
-            'test.xltm' => 3,
-            'test.ods' => 3,
-            'test.ppsx' => 2,
-            'test.pdf' => 3,
-            'test.xltx' => 3,
-            'test.slk' => 2,
-            'test1.pptx' => 2,
-            'test.xlsx' => 3,
-            'test.doc' => 3
-        ];
-
         $searchFiles = [];
         $handle = opendir(__DIR__ . '/testFiles');
 
@@ -226,9 +27,258 @@ class WordsFinderTests extends \PHPUnit_Framework_TestCase
         }
         closedir($handle);
 
-        $swf = new StopWordsFinder($this->stopWords, $searchFiles);
-        $result = $swf->proceedAllFiles();
+        return $searchFiles;
+    }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateWordsFinder()
+    {
+        $wfm = new WordsFinderManager($this->stopWords, []);
+    }
+
+    public function testProceedFile()
+    {
+        $assertResult = [
+            'testFile.txt' => ['text' => 3]
+        ];
+
+        $swf = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/testFile.txt']);
+        $result = $swf->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testDocx()
+    {
+        $assertResult = [
+            'test.docx' => ['text' => 1, 'footers' => 1]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.docx']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testDoc()
+    {
+        $assertResult = [
+            'test.doc' => ['text' => 2]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.doc']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testPdf()
+    {
+        $assertResult = [
+            'test.pdf' => ['text' => 3]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.pdf']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXls()
+    {
+        $assertResult = [
+            'test.xls' => ['text' => 3]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xls']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXlsx()
+    {
+        $assertResult = [
+            'test.xlsx' => ['text' => 3, 'DocInfo' => ['title' => 1]]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xlsx']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXlt()
+    {
+        $assertResult = [
+            'test.xlt' => ['text' => 3]
+        ];
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xlt']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXlsm()
+    {
+        $assertResult = [
+            'test.xlsm' => ['text' => 3, 'DocInfo' => ['keywords' => 1]]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xlsm']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXltx()
+    {
+        $assertResult = [
+            'test.xltx' => ['text' => 3]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xltx']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXltm()
+    {
+        $assertResult = [
+            'test.xltm' => ['text' => 3]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xltm']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testOds()
+    {
+        $assertResult = [
+            'test.ods' => ['text' => 3]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.ods']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testSlk()
+    {
+        $assertResult = [
+            'test.slk' => ['text' => 2]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.slk']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testXml()
+    {
+        $assertResult = [
+            'test.xml' => ['text' => 1]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.xml']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+    }
+
+    public function testPptx()
+    {
+        $assertResult = [
+            'test.ppsx' => ['text' => 2]
+        ];
+
+        $wfm = new WordsFinderManager($this->stopWords, [__DIR__ . '/testFiles/test.ppsx']);
+        $result = $wfm->run();
+
+        $this->assertEquals($assertResult, $result);
+
+    }
+
+    public function testProceedAllFiles()
+    {
+        $assertResult = [
+            'testFile1.txt' => [
+                'text' => 15
+            ],
+            'test.xls' => [
+                'text' => 3
+            ],
+            'test.xml' => [
+                'text' => 1
+            ],
+            'test.xlsm' => [
+                'text' => 3,
+                'DocInfo' => [
+                    'keywords' => 1
+                ]
+            ],
+            'test.xlt' => [
+                'text' => 3
+            ],
+            'test.docx' => [
+                'text' => 1,
+                'footers' => 1
+            ],
+            'test.rtf' => [
+                'text' => 3
+            ],
+            'testFile2.txt' => [
+                'text' => 6
+            ],
+            'test.xltm' => [
+                'text' => 3
+            ],
+            'testFile.txt' => [
+                'text' => 3
+            ],
+            'test.ods' => [
+                'text' => 3
+            ],
+            'test.ppsx' => [
+                'text' => 2
+            ],
+            'test.pdf' => [
+                'text' => 3
+            ],
+            'test.xltx' => [
+                'text' => 3
+            ],
+            'test.slk' => [
+                'text' => 2
+            ],
+            'test1.pptx' => [
+                'text' => 2,
+                'DocInfo' => [
+                    'keywords' => 2,
+                    'category' => 1
+                ]
+            ],
+            'test.xlsx' => [
+                'text' => 3,
+                'DocInfo' => [
+                    'title' => 1
+                ]
+            ],
+            'test.doc' => [
+                'text' => 2
+            ]
+        ];
+
+
+        $wfm = new WordsFinderManager($this->stopWords, $this->getSearchFiles());
+        $result = $wfm->run();
         $this->assertEquals($assertResult, $result);
         echo "\n";
         print_r($result);

@@ -32,4 +32,25 @@ final class ConverterPpt extends AbstractConverter
         return $text;
     }
 
+
+    /**
+     * @param $fileName
+     * @return array
+     */
+    public function getPptInfo($fileName)
+    {
+        parent::checkFileExist($fileName);
+
+        $objPHPExcel = IOFactory::load($fileName);
+        $pptInfo = (array)$objPHPExcel->getDocumentProperties();
+        
+        $pptInfoKeys = array_keys($pptInfo);
+        foreach ($pptInfoKeys as &$pptInfoKey) {
+            $pptInfoKey = str_replace("PhpOffice\\PhpPresentation\\DocumentProperties", '', $pptInfoKey);
+            $pptInfoKey = trim($pptInfoKey);
+        }
+        $pptInfo = array_filter(array_combine($pptInfoKeys, array_values($pptInfo)));
+
+        return $pptInfo;
+    }
 }

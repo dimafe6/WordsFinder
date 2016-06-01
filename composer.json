@@ -14,7 +14,8 @@
         "symfony/filesystem": "^3.1",
         "wholehogsoftware/filetotext": "dev-master",
         "PHPOffice/PHPExcel": "^1.8",
-        "PHPOffice/PHPPresentation": "^0.6.0"
+        "PHPOffice/PHPPresentation": "^0.6.0",
+        "PHPOffice/PHPWord": "dev-develop"
     },
     "require-dev": {
         "phpunit/phpunit" : "4.*",
@@ -25,6 +26,10 @@
         {
             "url": "https://github.com/wholehogsoftware/filetotext.git",
             "type": "git"
+        },
+        {
+            "url":"https://github.com/PHPOffice/PHPWord",
+            "type":"git"
         }
     ],
     "autoload": {

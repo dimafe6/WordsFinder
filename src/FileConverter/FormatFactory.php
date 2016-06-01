@@ -4,7 +4,7 @@ namespace FileConverter;
 
 use FileConverter\Exception\FileConverterException;
 
-class FormatFactory
+final class FormatFactory
 {
     public static function factory($fileType)
     {

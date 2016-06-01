@@ -17,7 +17,6 @@ final class ConverterXls extends AbstractConverter
 
         try {
             $objPHPExcel = PHPExcel_IOFactory::load($fileName);
-
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
             $objWriter->setDelimiter("\t");
             $objWriter->save($tempFile);
@@ -33,6 +32,28 @@ final class ConverterXls extends AbstractConverter
         }
 
         return $text;
+    }
+
+    /**
+     * @param $fileName
+     * @return array
+     */
+    public function getXlsInfo($fileName)
+    {
+        parent::checkFileExist($fileName);
+
+        $objPHPExcel = PHPExcel_IOFactory::load($fileName);
+        $xlsInfo = (array)$objPHPExcel->getProperties();
+        $xlsInfoKeys = array_keys($xlsInfo);
+        foreach ($xlsInfoKeys as &$xlsInfoKey) {
+            $xlsInfoKey = str_replace(":PHPExcel_DocumentProperties:private", '', $xlsInfoKey);
+            $xlsInfoKey = str_replace("_", '', $xlsInfoKey);
+            $xlsInfoKey = str_replace("PHPExcelDocumentProperties", '', $xlsInfoKey);
+            $xlsInfoKey = trim($xlsInfoKey);
+        }
+        $xlsInfo = array_filter(array_combine($xlsInfoKeys, array_values($xlsInfo)));
+
+        return $xlsInfo;
     }
 
 

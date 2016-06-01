@@ -7,13 +7,13 @@ use FileConverter\FormatFactory;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use WordsFinder\Exception\WordsFinderException;
 
-abstract class WordsFinder
+abstract class AbstractWordsFinder
 {
     /**
-     * Files for work
+     * File for work
      * @var array $inputFiles
      */
-    protected $inputFiles = [];
+    protected $inputFile = '';
 
     /**
      * Words for search in files
@@ -29,12 +29,12 @@ abstract class WordsFinder
 
     /**
      * WordsFinder constructor.
-     * @param array $inputFiles
+     * @param string $inputFile
      * @param array $wordsForSearch
      */
-    public function __construct(array $wordsForSearch, array $inputFiles = [])
+    public function __construct(array $wordsForSearch, $inputFile)
     {
-        $this->setInputFiles($inputFiles);
+        $this->setInputFile($inputFile);
         $this->setWordsForSearch($wordsForSearch);
 
         $this->createRegexFromWords();
@@ -44,25 +44,29 @@ abstract class WordsFinder
      * Get input files
      * @return array
      */
-    public function getInputFiles()
+    final public function getInputFiles()
     {
-        return $this->inputFiles;
+        return $this->inputFile;
     }
 
     /**
-     * Set input files
-     * @param array $inputFiles
+     * Set input file
+     * @param array $inputFile
      */
-    public function setInputFiles(array $inputFiles)
+    final public function setInputFile($inputFile)
     {
-        $this->inputFiles = $inputFiles;
+        if (!file_exists($inputFile)) {
+            throw new FileNotFoundException(sprintf('File "%s" could not be found.', $inputFile));
+        }
+
+        $this->inputFiles = $inputFile;
     }
 
     /**
      * Get words for search
      * @return array
      */
-    public function getWordsForSearch()
+    final public function getWordsForSearch()
     {
         return $this->wordsForSearch;
     }
@@ -71,13 +75,15 @@ abstract class WordsFinder
      * Set words for search
      * @param array $wordsForSearch
      */
-    public function setWordsForSearch(array $wordsForSearch)
+    final public function setWordsForSearch(array $wordsForSearch)
     {
         if (count($wordsForSearch) <= 0) {
             throw new \InvalidArgumentException("Words for search cant be empty");
         }
 
         $this->wordsForSearch = $wordsForSearch;
+
+        $this->createRegexFromWords();
     }
 
     /**
@@ -118,6 +124,21 @@ abstract class WordsFinder
     }
 
     /**
+     * Get count occurrences words in text
+     * @param string $textForSearch
+     * @return integer
+     */
+    public function proceedText($textForSearch)
+    {
+        $matches = [];
+        $textForSearch = str_replace("\n", ' ', $textForSearch);
+        $textForSearch = strtolower($textForSearch);
+        $result = preg_match_all($this->regexp, $textForSearch, $matches);
+
+        return $result;
+    }
+
+    /**
      * Get count searched words in file
      * @param string $fileName
      * @return array
@@ -129,26 +150,11 @@ abstract class WordsFinder
         $matches = [];
         $fileShortName = basename($fileName);
 
-        $result = preg_match_all($this->regexp, $textForSearch, $matches);
-
+        $result = $this->proceedText($textForSearch);
         if ($result) {
-            $returnResult = isset($matches[0]) ? [$fileShortName => $result] : [];
+            $returnResult[$fileShortName]['text'] = $result;
         }
 
         return $returnResult;
-    }
-
-    public function proceedAllFiles()
-    {
-        if (count($this->inputFiles) <= 0) {
-            throw new \InvalidArgumentException("Input files cant be empty. Use the setInputFiles");
-        }
-
-        $result = [];
-        foreach ($this->inputFiles as $inputFile) {
-            $result = array_merge($result, $this->proceedFile($inputFile));
-        }
-
-        return $result;
     }
 }
