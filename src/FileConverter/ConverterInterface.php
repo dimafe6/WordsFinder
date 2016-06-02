@@ -2,6 +2,10 @@
 
 namespace FileConverter;
 
+/**
+ * Interface ConverterInterface
+ * @package FileConverter
+ */
 interface ConverterInterface
 {
     /**

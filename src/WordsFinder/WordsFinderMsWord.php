@@ -5,8 +5,17 @@ namespace WordsFinder;
 use FileConverter\ConverterDocx;
 use FileConverter\FormatFactory;
 
+/**
+ * Class WordsFinderMsWord
+ * @package WordsFinder
+ */
 final class WordsFinderMsWord extends AbstractWordsFinder
 {
+    /**
+     * Process file
+     * @param string $fileName
+     * @return array
+     */
     public function proceedFile($fileName)
     {
         $fname = basename($fileName);
@@ -26,6 +35,11 @@ final class WordsFinderMsWord extends AbstractWordsFinder
         return $result;
     }
 
+    /**
+     * Get result for document info
+     * @param string $fileName
+     * @return array
+     */
     private function getResultForDocInfo($fileName)
     {
         $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
@@ -43,6 +57,11 @@ final class WordsFinderMsWord extends AbstractWordsFinder
         return $docInfo;
     }
 
+    /**
+     * Get result for footers
+     * @param string $fileName
+     * @return int
+     */
     private function getResultForFooters($fileName)
     {
         $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
@@ -57,6 +76,11 @@ final class WordsFinderMsWord extends AbstractWordsFinder
 
     }
 
+    /**
+     * Get result for headers
+     * @param string $fileName
+     * @return int
+     */
     private function getResultForHeaders($fileName)
     {
         $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);

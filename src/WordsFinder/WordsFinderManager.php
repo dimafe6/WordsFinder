@@ -2,6 +2,10 @@
 
 namespace WordsFinder;
 
+/**
+ * Class WordsFinderManager
+ * @package WordsFinder
+ */
 final class WordsFinderManager
 {
     /**
@@ -16,6 +20,11 @@ final class WordsFinderManager
      */
     protected $wordsForSearch = [];
 
+    /**
+     * WordsFinderManager constructor.
+     * @param array $wordsForSearch
+     * @param array $inputFiles
+     */
     public function __construct(array $wordsForSearch, array $inputFiles)
     {
         $this->setInputFiles($inputFiles);
@@ -66,6 +75,10 @@ final class WordsFinderManager
         $this->wordsForSearch = $wordsForSearch;
     }
 
+    /**
+     * Start processing files
+     * @return array
+     */
     public function run()
     {
         $result = [];

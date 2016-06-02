@@ -4,8 +4,17 @@ namespace FileConverter;
 
 use FileConverter\Exception\FileConverterException;
 
+/**
+ * Class FormatFactory
+ * @package FileConverter
+ */
 final class FormatFactory
 {
+    /**
+     * Get converter from file type
+     * @param string $fileType File extension
+     * @return ConverterInterface
+     */
     public static function factory($fileType)
     {
         $className = "ConverterTxt";

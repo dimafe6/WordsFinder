@@ -4,8 +4,18 @@ namespace WordsFinder;
 
 use WordsFinder\Exception\WordsFinderException;
 
+/**
+ * Class WordsFinderFactory
+ * @package WordsFinder
+ */
 final class WordsFinderFactory
 {
+    /**
+     * Get WordsFinder from file
+     * @param array $wordsForSearch Array words for search
+     * @param string $fileName 
+     * @return AbstractWordsFinder
+     */
     public static function factory(array $wordsForSearch, $fileName)
     {
         $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);

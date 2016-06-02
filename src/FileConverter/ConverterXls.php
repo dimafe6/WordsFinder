@@ -6,8 +6,17 @@ namespace FileConverter;
 use PHPExcel_IOFactory;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
+/**
+ * Class ConverterXls
+ * @package FileConverter
+ */
 final class ConverterXls extends AbstractConverter
 {
+    /**
+     * Get plain text from file
+     * @param string $fileName
+     * @return string
+     */
     public function getText($fileName)
     {
         parent::checkFileExist($fileName);
@@ -35,7 +44,8 @@ final class ConverterXls extends AbstractConverter
     }
 
     /**
-     * @param $fileName
+     * Get document info
+     * @param string $fileName
      * @return array
      */
     public function getXlsInfo($fileName)

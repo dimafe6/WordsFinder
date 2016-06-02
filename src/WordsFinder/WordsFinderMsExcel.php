@@ -2,12 +2,20 @@
 
 namespace WordsFinder;
 
-use FileConverter\ConverterDocx;
 use FileConverter\ConverterXls;
 use FileConverter\FormatFactory;
 
+/**
+ * Class WordsFinderMsExcel
+ * @package WordsFinder
+ */
 final class WordsFinderMsExcel extends AbstractWordsFinder
 {
+    /**
+     * Process file
+     * @param string $fileName
+     * @return array
+     */
     public function proceedFile($fileName)
     {
         $fname = basename($fileName);
@@ -23,6 +31,11 @@ final class WordsFinderMsExcel extends AbstractWordsFinder
         return $result;
     }
 
+    /**
+     * Get result for document info
+     * @param string $fileName
+     * @return array
+     */
     private function getResultForXlsInfo($fileName)
     {
         $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);

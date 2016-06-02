@@ -5,8 +5,17 @@ namespace WordsFinder;
 use FileConverter\ConverterPpt;
 use FileConverter\FormatFactory;
 
+/**
+ * Class WordsFinderMsPowerPoint
+ * @package WordsFinder
+ */
 final class WordsFinderMsPowerPoint extends AbstractWordsFinder
 {
+    /**
+     * Process file
+     * @param string $fileName
+     * @return array
+     */
     public function proceedFile($fileName)
     {
         $fname = basename($fileName);
@@ -22,6 +31,11 @@ final class WordsFinderMsPowerPoint extends AbstractWordsFinder
         return $result;
     }
 
+    /**
+     * Get result for document info
+     * @param string $fileName
+     * @return array
+     */
     private function getResultForPptInfo($fileName)
     {
         $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);

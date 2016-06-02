@@ -5,8 +5,17 @@ namespace FileConverter;
 use PhpOffice\PhpWord\IOFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
 
+/**
+ * Class ConverterDocx
+ * @package FileConverter
+ */
 final class ConverterDocx extends AbstractConverter
 {
+    /**
+     * Get plain text from file
+     * @param string $fileName
+     * @return string
+     */
     public function getText($fileName)
     {
         parent::checkFileExist($fileName);
@@ -20,6 +29,11 @@ final class ConverterDocx extends AbstractConverter
         }
     }
 
+    /**
+     * Get footers from .doc file
+     * @param string $fileName
+     * @return string
+     */
     public function getFooters($fileName)
     {
         $phpWord = IOFactory::load($fileName);
@@ -39,6 +53,11 @@ final class ConverterDocx extends AbstractConverter
         return rtrim($footers, ', ');
     }
 
+    /**
+     * Get headers from .doc file
+     * @param string  $fileName
+     * @return string
+     */
     public function getHeaders($fileName)
     {
         $phpWord = IOFactory::load($fileName);
@@ -59,7 +78,8 @@ final class ConverterDocx extends AbstractConverter
     }
 
     /**
-     * @param $fileName
+     * Get document info
+     * @param string $fileName
      * @return array
      */
     public function getDocInfo($fileName)
@@ -78,6 +98,11 @@ final class ConverterDocx extends AbstractConverter
         return $docInfo;
     }
 
+    /**
+     * Get .docx plain text
+     * @param string $filename
+     * @return string
+     */
     private function read_docx($filename)
     {
 

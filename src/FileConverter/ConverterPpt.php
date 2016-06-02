@@ -5,8 +5,17 @@ namespace FileConverter;
 use PhpOffice\PhpPresentation\IOFactory;
 use PhpOffice\PhpPresentation\Shape\RichText;
 
+/**
+ * Class ConverterPpt
+ * @package FileConverter
+ */
 final class ConverterPpt extends AbstractConverter
 {
+    /**
+     * Get plain text from file
+     * @param string $fileName
+     * @return string
+     */
     public function getText($fileName)
     {
         parent::checkFileExist($fileName);
@@ -34,7 +43,8 @@ final class ConverterPpt extends AbstractConverter
 
 
     /**
-     * @param $fileName
+     * Get document info
+     * @param string $fileName
      * @return array
      */
     public function getPptInfo($fileName)

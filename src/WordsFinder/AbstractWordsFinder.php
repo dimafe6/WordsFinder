@@ -7,6 +7,10 @@ use FileConverter\FormatFactory;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use WordsFinder\Exception\WordsFinderException;
 
+/**
+ * Class AbstractWordsFinder
+ * @package WordsFinder
+ */
 abstract class AbstractWordsFinder
 {
     /**

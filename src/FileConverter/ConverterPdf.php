@@ -2,8 +2,17 @@
 
 namespace FileConverter;
 
+/**
+ * Class ConverterPdf
+ * @package FileConverter
+ */
 final class ConverterPdf extends AbstractConverter
 {
+    /**
+     * Get plain text from file
+     * @param string $fileName
+     * @return string
+     */
     public function getText($fileName)
     {
         parent::checkFileExist($fileName);
@@ -22,7 +31,6 @@ final class ConverterPdf extends AbstractConverter
 
     /**
      * Parse PDF content
-     *
      * @param string $content
      * @return string
      */
@@ -34,7 +42,7 @@ final class ConverterPdf extends AbstractConverter
     /**
      * Convert a PDF into text.
      *
-     * @param string $filename The filename to extract the data from.
+     * @param string $data The filename to extract the data from.
      * @return string The extracted text from the PDF
      */
     protected static function extractText($data)
@@ -96,6 +104,10 @@ final class ConverterPdf extends AbstractConverter
         }
     }
 
+    /**
+     * @param $content
+     * @return string
+     */
     protected static function extractTextElements($content)
     {
         if (strpos($content, '/CIDInit') === 0) {
