@@ -23,7 +23,7 @@ final class WordsFinderMsPowerPoint extends AbstractWordsFinder
         $resultForText = parent::proceedFile($fileName);
         $resultForPptInfo = $this->getResultForPptInfo($fileName);
 
-        $result[$fname]['text'] = $resultForText[$fname]['text'];
+        $result[$fname]['text'] = $resultForText;
         $result[$fname]['DocInfo'] = $resultForPptInfo;
 
         $result[$fname] = array_filter($result[$fname]);
@@ -38,12 +38,10 @@ final class WordsFinderMsPowerPoint extends AbstractWordsFinder
      */
     private function getResultForPptInfo($fileName)
     {
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
         /**
          * @var ConverterPpt $converter
          */
-        $converter = FormatFactory::factory($fileExt);
+        $converter = FormatFactory::factory($fileName);
         $pptInfo = $converter->getPptInfo($fileName);
         foreach ($pptInfo as &$item) {
             $item = parent::proceedText($item);

@@ -101,14 +101,12 @@ abstract class AbstractWordsFinder
             throw new FileNotFoundException(sprintf('File "%s" could not be found.', $fileName));
         }
 
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
         /**
          * @var ConverterInterface $converter ;
          */
-        $converter = FormatFactory::factory($fileExt);
+        $converter = FormatFactory::factory($fileName);
 
-        $text = strtolower($converter->getText($fileName));
+        $text = strtolower($converter->getText());
 
         return $text;
     }
@@ -137,7 +135,14 @@ abstract class AbstractWordsFinder
         $matches = [];
         $textForSearch = str_replace("\n", ' ', $textForSearch);
         $textForSearch = strtolower($textForSearch);
-        $result = preg_match_all($this->regexp, $textForSearch, $matches);
+        $count = preg_match_all($this->regexp, $textForSearch, $matches);
+        $result = [];
+
+        if ($count > 0 && isset($matches[0])) {
+            $result = ['count' => $count, 'matches' => array_count_values($matches[0])];
+        } else {
+            $result = [];
+        }
 
         return $result;
     }
@@ -155,10 +160,7 @@ abstract class AbstractWordsFinder
         $fileShortName = basename($fileName);
 
         $result = $this->proceedText($textForSearch);
-        if ($result) {
-            $returnResult[$fileShortName]['text'] = $result;
-        }
 
-        return $returnResult;
+        return $result;
     }
 }

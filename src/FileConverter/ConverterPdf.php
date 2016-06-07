@@ -8,19 +8,23 @@ namespace FileConverter;
  */
 final class ConverterPdf extends AbstractConverter
 {
-    /**
-     * Get plain text from file
-     * @param string $fileName
-     * @return string
-     */
-    public function getText($fileName)
+    public function __construct($fileName)
     {
         parent::checkFileExist($fileName);
 
+        $this->fileName = $fileName;
+    }
+
+    /**
+     * Get plain text from file
+     * @return string
+     */
+    public function getText()
+    {
         $text = '';
 
         try {
-            $text = $this->parseContent(file_get_contents($fileName));
+            $text = $this->parseContent(file_get_contents($this->fileName));
 
         } catch (\Exception $ex) {
             return '';

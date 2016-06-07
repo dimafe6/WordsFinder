@@ -11,25 +11,31 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 final class ConverterRtf extends AbstractConverter
 {
+    public function __construct($fileName)
+    {
+        parent::checkFileExist($fileName);
+
+        $this->fileName = $fileName;
+    }
+
     /**
      * Get plain text from file
-     * @param string $fileName
      * @return string
      * @throws IOException
      */
-    public function getText($fileName)
+    public function getText()
     {
-        parent::checkFileExist($fileName);
+        parent::checkFileExist($this->fileName);
 
         try {
             $converter = new DocumentParser();
 
-            $text = $converter->parseFromFile($fileName, 'application/rtf');
+            $text = $converter->parseFromFile($this->fileName, 'application/rtf');
 
             if ($text) {
                 return $text;
             } else {
-                throw new IOException("Error loading file $fileName");
+                throw new IOException("Error loading file $this->fileName");
             }
         } catch (\Exception $ex) {
             return '';

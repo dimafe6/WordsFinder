@@ -23,7 +23,7 @@ final class WordsFinderMsExcel extends AbstractWordsFinder
         $resultForText = parent::proceedFile($fileName);
         $resultForXlsInfo = $this->getResultForXlsInfo($fileName);
 
-        $result[$fname]['text'] = $resultForText[$fname]['text'];
+        $result[$fname]['text'] = $resultForText;
         $result[$fname]['DocInfo'] = $resultForXlsInfo;
 
         $result[$fname] = array_filter($result[$fname]);
@@ -38,12 +38,10 @@ final class WordsFinderMsExcel extends AbstractWordsFinder
      */
     private function getResultForXlsInfo($fileName)
     {
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
         /**
          * @var ConverterXls $converter
          */
-        $converter = FormatFactory::factory($fileExt);
+        $converter = FormatFactory::factory($fileName);
         $xlsInfo = $converter->getXlsInfo($fileName);
         foreach ($xlsInfo as &$item) {
             $item = parent::proceedText($item);

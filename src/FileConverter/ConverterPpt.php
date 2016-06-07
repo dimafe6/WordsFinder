@@ -3,6 +3,7 @@
 namespace FileConverter;
 
 use PhpOffice\PhpPresentation\IOFactory;
+use PhpOffice\PhpPresentation\PhpPresentation;
 use PhpOffice\PhpPresentation\Shape\RichText;
 
 /**
@@ -12,19 +13,31 @@ use PhpOffice\PhpPresentation\Shape\RichText;
 final class ConverterPpt extends AbstractConverter
 {
     /**
-     * Get plain text from file
-     * @param string $fileName
-     * @return string
+     * @var PhpPresentation
      */
-    public function getText($fileName)
+    private $document;
+
+    public function __construct($fileName)
     {
         parent::checkFileExist($fileName);
 
+        if ($this->document == null || $this->fileName == null || $this->fileName !== $fileName) {
+            $this->document = IOFactory::load($fileName);
+        }
+
+        $this->fileName = $fileName;
+    }
+
+    /**
+     * Get plain text from file
+     * @return string
+     */
+    public function getText()
+    {
         $text = '';
 
         try {
-            $objPHPPowerPoint = IOFactory::load($fileName);
-            foreach ($objPHPPowerPoint->getAllSlides() as $slide) {
+            foreach ($this->document->getAllSlides() as $slide) {
                 foreach ($slide->getShapeCollection() as $shape) {
                     if ($shape instanceof RichText) {
                         /**
@@ -49,11 +62,8 @@ final class ConverterPpt extends AbstractConverter
      */
     public function getPptInfo($fileName)
     {
-        parent::checkFileExist($fileName);
+        $pptInfo = (array)$this->document->getDocumentProperties();
 
-        $objPHPExcel = IOFactory::load($fileName);
-        $pptInfo = (array)$objPHPExcel->getDocumentProperties();
-        
         $pptInfoKeys = array_keys($pptInfo);
         foreach ($pptInfoKeys as &$pptInfoKey) {
             $pptInfoKey = str_replace("PhpOffice\\PhpPresentation\\DocumentProperties", '', $pptInfoKey);

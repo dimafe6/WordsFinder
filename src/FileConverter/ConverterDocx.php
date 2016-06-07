@@ -3,43 +3,54 @@
 namespace FileConverter;
 
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Class ConverterDocx
  * @package FileConverter
  */
-final class ConverterDocx extends AbstractConverter
+class ConverterDocx extends AbstractConverter
 {
     /**
-     * Get plain text from file
-     * @param string $fileName
-     * @return string
+     * @var PhpWord
      */
-    public function getText($fileName)
+    protected $document = null;
+
+    public function __construct($fileName, $readerName = 'Word2007')
     {
         parent::checkFileExist($fileName);
 
-        $text = $this->read_docx($fileName);
+        if ($this->document == null || $this->fileName == null || $this->fileName !== $fileName) {
+            $this->document = IOFactory::load($fileName, $readerName);
+        }
+
+        $this->fileName = $fileName;
+    }
+
+    /**
+     * Get plain text from file
+     * @return string
+     */
+    public function getText()
+    {
+        $text = $this->read_docx($this->fileName);
 
         if ($text) {
             return $text;
         } else {
-            throw new IOException("Error loading file $fileName");
+            throw new IOException("Error loading file " . $this->fileName);
         }
     }
 
     /**
      * Get footers from .doc file
-     * @param string $fileName
      * @return string
      */
-    public function getFooters($fileName)
+    public function getFooters()
     {
-        $phpWord = IOFactory::load($fileName);
-
         $footers = '';
-        foreach ($phpWord->getSections() as $section) {
+        foreach ($this->document->getSections() as $section) {
             foreach ($section->getFooters() as $footer) {
                 foreach ($footer->getElements() as $f) {
                     try {
@@ -55,15 +66,12 @@ final class ConverterDocx extends AbstractConverter
 
     /**
      * Get headers from .doc file
-     * @param string  $fileName
      * @return string
      */
-    public function getHeaders($fileName)
+    public function getHeaders()
     {
-        $phpWord = IOFactory::load($fileName);
-
         $headers = '';
-        foreach ($phpWord->getSections() as $section) {
+        foreach ($this->document->getSections() as $section) {
             foreach ($section->getHeaders() as $header) {
                 foreach ($header->getElements() as $h) {
                     try {
@@ -79,15 +87,11 @@ final class ConverterDocx extends AbstractConverter
 
     /**
      * Get document info
-     * @param string $fileName
      * @return array
      */
-    public function getDocInfo($fileName)
+    public function getDocInfo()
     {
-        parent::checkFileExist($fileName);
-
-        $phpWord = IOFactory::load($fileName);
-        $docInfo = (array)$phpWord->getDocInfo();
+        $docInfo = (array)$this->document->getDocInfo();
         $docInfoKeys = array_keys($docInfo);
         foreach ($docInfoKeys as &$docInfoKey) {
             $docInfoKey = str_replace("PhpOffice\\PhpWord\\Metadata\\DocInfo", '', $docInfoKey);

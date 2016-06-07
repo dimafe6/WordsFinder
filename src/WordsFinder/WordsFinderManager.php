@@ -86,7 +86,7 @@ final class WordsFinderManager
             /**
              * @var AbstractWordsFinder $finder
              */
-            $finder = WordsFinderFactory::factory($this->wordsForSearch,$inputFile);
+            $finder = WordsFinderFactory::factory($this->wordsForSearch, $inputFile);
             $result = array_merge($result, $finder->proceedFile($inputFile));
         }
 

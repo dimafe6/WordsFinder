@@ -25,14 +25,14 @@ final class WordsFinderMsWord extends AbstractWordsFinder
         $resultForHeaders = $this->getResultForHeaders($fileName);
         $resultForFooters = $this->getResultForFooters($fileName);
 
-        $result[$fname]['text'] = $resultForText[$fname]['text'];
+        $result[$fname]['text'] = $resultForText;
         $result[$fname]['DocInfo'] = $resultForDocInfo;
         $result[$fname]['headers'] = $resultForHeaders;
         $result[$fname]['footers'] = $resultForFooters;
 
         $result[$fname] = array_filter($result[$fname]);
 
-        return $result;
+        return array_filter($result);
     }
 
     /**
@@ -42,12 +42,11 @@ final class WordsFinderMsWord extends AbstractWordsFinder
      */
     private function getResultForDocInfo($fileName)
     {
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
         /**
          * @var ConverterDocx $converter
          */
-        $converter = FormatFactory::factory($fileExt);
+        $converter = FormatFactory::factory($fileName);
+
         $docInfo = $converter->getDocInfo($fileName);
         foreach ($docInfo as &$item) {
             $item = parent::proceedText($item);
@@ -64,12 +63,10 @@ final class WordsFinderMsWord extends AbstractWordsFinder
      */
     private function getResultForFooters($fileName)
     {
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
         /**
          * @var ConverterDocx $converter
          */
-        $converter = FormatFactory::factory($fileExt);
+        $converter = FormatFactory::factory($fileName);
         $footers = parent::proceedText($converter->getFooters($fileName));
 
         return $footers;
@@ -83,12 +80,10 @@ final class WordsFinderMsWord extends AbstractWordsFinder
      */
     private function getResultForHeaders($fileName)
     {
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-
         /**
          * @var ConverterDocx $converter
          */
-        $converter = FormatFactory::factory($fileExt);
+        $converter = FormatFactory::factory($fileName);
 
         $headers = parent::proceedText($converter->getHeaders($fileName));
 

@@ -12,14 +12,16 @@ final class FormatFactory
 {
     /**
      * Get converter from file type
-     * @param string $fileType File extension
+     * @param string $fileName File name
      * @return ConverterInterface
      */
-    public static function factory($fileType)
+    public static function factory($fileName)
     {
+        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+
         $className = "ConverterTxt";
 
-        switch ($fileType) {
+        switch ($fileExt) {
             case 'xls':
             case 'xlsx':
             case 'xlsm':
@@ -42,7 +44,7 @@ final class FormatFactory
                 $className = "ConverterTxt";
                 break;
             default:
-                $className = "Converter" . ucfirst($fileType);
+                $className = "Converter" . ucfirst($fileExt);
                 break;
         }
 
@@ -55,7 +57,7 @@ final class FormatFactory
         include_once($classFileName);
 
         $classFullName = "FileConverter\\$className";
-        $object = new $classFullName;
+        $object = new $classFullName($fileName);
 
         return $object;
     }

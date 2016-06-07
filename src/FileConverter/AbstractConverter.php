@@ -12,6 +12,10 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  */
 abstract class AbstractConverter implements ConverterInterface
 {
+    protected $fileName = null;
+
+    abstract public function __construct($fileName);
+
     /**
      * Check if file exist
      * @param string $fileName
